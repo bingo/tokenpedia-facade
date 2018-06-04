@@ -1,11 +1,210 @@
 type Query {
-  info: String!
-  feed: [Link!]!
-
+  eosToken: Token
+  token(id: String): Token 
 }
 
-type Link {
-  id: ID!
-  description: String!
+type Date {
+  elapsed: Float #unix time elapsed after 1970-01-01
+  tz: String #timezone
+}
+
+enum CurrencyUnit {
+  USD
+  RMB
+}
+
+type ETHAddress {
+  address: String! #TODO: add constraints to address format
+}
+
+type Holder {
+  position: Int
+  address: String
+  share: Float
+  percentage: Float
+}
+
+type DistributionItem {
+  owner: String!
+  percentage: Float!
+}
+
+type ICOInfo {
+  startDate: Date
+  endDate: Date
+  initPrice(unit: CurrencyUnit = USD): Float
+  totalRaised(unit: CurrencyUnit = USD): Float
+  country: String
+  lockPlan: String
+  isDestroyable: Boolean
+  distribution: [DistributionItem]
+}
+
+type ExchangeInfo {
+  coinName: String!
+  exchangeAddress: String
+  exchangeIcon: String
+  launchDate: Date
+  dayOnePercentage: Float  #first day price +/- percentage
+  isBroken: Boolean #ever broken below init price
+}
+
+type TransactionInfo {
+  price(unit: CurrencyUnit = USD): Float
+  amount: Float
+}
+
+enum SOCIALMEDIA {
+  LINKEDIN
+  FACEBOOK
+  TWITTER
+  TELEGRAM
+  WEIBO
+}
+
+type SocialLink {
+  mediaType: SOCIALMEDIA
   url: String!
 }
+
+type TeamMember {
+  isFounder: Boolean!
+  photo: String
+  name: String!
+  position: String!
+  experience: String
+  socialLinks: [SocialLink!]
+}
+
+
+type TeamInfo {
+  members: [TeamMember]!
+  address: String
+  totalMembers: Int
+  developers: Int
+  developerPercent: Float
+  marketingMembers: Int
+  marketingMemberPercent: Float
+}
+
+type Advisor {
+  isVIP: Boolean
+  photo: String #url link to photo
+  name: String!
+  title: String
+  socialLinks: [SocialLink!]
+}
+
+type AdvisorAllocation {
+  district: String!
+  number: Int
+}
+
+type AdvisorStatistic {
+  number: Int
+  VIPNumber: Int
+  experiencedNumber: Int
+  allocation: [AdvisorAllocation!]
+}
+
+type AdvisorInfo {
+  advisors: [Advisor!]!
+  statiscs: AdvisorStatistic
+}
+
+type Investor {
+  name: String!
+  icon: String
+  url: String
+  isVIP: Boolean
+
+}
+
+type InvestorInfo {
+  investors: [Investor!]!
+  investorNum: Int
+  bigInvestorNum: Int
+}
+
+type SociaMedia {
+  name: String!
+  subscribers: Int!
+  activities: Int
+}
+
+type SearchIndex {
+  indexer: String!
+  last7Days: Float
+  last30Days: Float
+  trendSnapShot: String #trends snapshot image url
+}
+
+type ProjectInfo {
+  url: String
+  whitePaper: String
+  name: String #company/funds name
+  registration: String
+  address: String
+  contact: String
+}
+
+enum PLATFORM {
+  IOS,
+  ANDROID,
+  GENERIC
+}
+
+type DApp {
+  platform: PLATFORM
+  downloadAddress: String
+  updatedAt: Date
+}
+
+type GithubInfo {
+  link: String! #github address
+  hasPublicRepos: Boolean!
+  publicRepos: Int
+  contributors: Int
+  last7DaysCommit: Int
+  hasOfficialDevDoc: Boolean
+  urlOfDevDoc: String
+}
+
+#Token
+# Basic entity in tokenpedia
+type Token {
+  id: ID!
+  name: String!
+  abbrev: String
+  chineseName: String
+  icon: String #url string of icon, optional
+  description: String
+  category: String
+  totalSupply: Float
+  circulateSupply: Float
+  contractAddress: ETHAddress!
+  holders: Float #Holder account number
+  transactions: Float
+  isListed: Boolean! #Listed in public exchange
+  marketCap(unit: CurrencyUnit = USD): Float#!may overfloat, bignumber needed, also UNIT needed
+  currentPrice(unit: CurrencyUnit = USD): Float
+  maxPrice(unit: CurrencyUnit = USD): Float
+  minPrice(unit: CurrencyUnit = USD): Float
+  topHolders: [Holder!]
+  icoInfo: [ICOInfo]
+  exchangeInfo: [ExchangeInfo]
+  transactionInfo: [TransactionInfo]
+  teamInfo: TeamInfo
+  advisorInfo: AdvisorInfo
+  investorInfo: InvestorInfo
+  socialMedias: [SociaMedia]
+  searchIndex: [SearchIndex]
+  projectInfo: ProjectInfo
+  dappInfo: [DApp]
+  githubInfo: GithubInfo
+}
+
+
+
+
+

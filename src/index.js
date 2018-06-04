@@ -1,22 +1,23 @@
 const { GraphQLServer } = require('graphql-yoga')
 
-// 1
-let links = [{
-  id: 'link-0',
-  url: 'www.howtographql.com',
-  description: 'Fullstack tutorial for GraphQL'
-}]
+// 1 mock data preparation
+const EOS = {
+  name: 'EOS',
+  abbrev: 'EOS',
+  chineseName: '柚子',
+  icon: 'EOS Icon URL',
+  description: 'This is EOS description',
+  category: 'Infrastructure',
+  totalSupply: 21000000,
+  circulateSupply: 21000000,
+  isListed: true,
+
+}
 
 // 2
 const resolvers = {
   Query: {
-    info: () => `This is the API of a Hackernews Clone`,
-    feed: () => links,
-  },
-  Link: {
-    id: (root) => root.id,
-    description: (root) => root.description,
-    url: (root) => root.url,
+    eosToken: () => EOS,
   },
 }
 
