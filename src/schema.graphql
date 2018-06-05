@@ -1,11 +1,25 @@
 type Query {
-  eosToken: Token
+  hotTokens: [Token!]
+  tokensTopN(byField: SORTABLE_FIELDS = MARKET_CAPITAL, order: ORDER = DESC, limit: Int = 20): [Token!]
+  tokensToMarket: [TokenToMarket!]
+  tokenList(byField: SORTABLE_FIELDS = MARKET_CAPITAL, order: ORDER = DESC, limit: Int = 20): [Token!]
   token(id: String): Token 
 }
 
 type Date {
   elapsed: Float #unix time elapsed after 1970-01-01
   tz: String #timezone
+}
+
+enum SORTABLE_FIELDS {
+  MARKET_CAPITAL
+  CURRENT_PRICE
+  PERCENTAGE
+}
+
+enum ORDER {
+  DESC #descend
+  ASC #ascend
 }
 
 enum CurrencyUnit {
@@ -160,48 +174,61 @@ type DApp {
   updatedAt: Date
 }
 
-type GithubInfo {
+type GithubInfo { #github 
   link: String! #github address
   hasPublicRepos: Boolean!
-  publicRepos: Int
-  contributors: Int
-  last7DaysCommit: Int
   hasOfficialDevDoc: Boolean
   urlOfDevDoc: String
+  publicRepos: Int
+  #below information retrieved from Github Service
+  last7DaysCommit: Int
+  last30DaysCommit: Int
+  contributors: Int
+  fork:Int
+  star:Int
+  watch:Int
 }
 
 #Token
 # Basic entity in tokenpedia
 type Token {
   id: ID!
-  name: String!
-  abbrev: String
-  chineseName: String
-  icon: String #url string of icon, optional
-  description: String
+  name: String! #cms
+  abbrev: String #cms
+  chineseName: String #cms
+  icon: String #url string of icon, optional #cms
+  description: String #cms
   category: String
   totalSupply: Float
   circulateSupply: Float
   contractAddress: ETHAddress!
-  holders: Float #Holder account number
-  transactions: Float
-  isListed: Boolean! #Listed in public exchange
+  holders: Float #Holder account number  #bigdata
+  transactions: Float #bigdata
+  isListed: Boolean! #Listed in public exchange  
   marketCap(unit: CurrencyUnit = USD): Float#!may overfloat, bignumber needed, also UNIT needed
-  currentPrice(unit: CurrencyUnit = USD): Float
-  maxPrice(unit: CurrencyUnit = USD): Float
-  minPrice(unit: CurrencyUnit = USD): Float
-  topHolders: [Holder!]
-  icoInfo: [ICOInfo]
-  exchangeInfo: [ExchangeInfo]
+  currentPrice(unit: CurrencyUnit = USD): Float #price
+  maxPrice(unit: CurrencyUnit = USD): Float #?
+  minPrice(unit: CurrencyUnit = USD): Float #?
+  topHolders: [Holder!] 
+  icoInfo: [ICOInfo] #cms
+  exchangeInfo: [ExchangeInfo] 
   transactionInfo: [TransactionInfo]
-  teamInfo: TeamInfo
-  advisorInfo: AdvisorInfo
-  investorInfo: InvestorInfo
-  socialMedias: [SociaMedia]
-  searchIndex: [SearchIndex]
-  projectInfo: ProjectInfo
-  dappInfo: [DApp]
+  teamInfo: TeamInfo #cms
+  advisorInfo: AdvisorInfo  #cms
+  investorInfo: InvestorInfo #cms
+  socialMedias: [SociaMedia] #cms
+  searchIndex: [SearchIndex] #???
+  projectInfo: ProjectInfo  #cms
+  dappInfo: [DApp] #cms
   githubInfo: GithubInfo
+}
+
+#token not go to market yet
+type TokenToMarket {
+  id: ID!
+  name: String!
+  icon: String
+  estToMarket: Date
 }
 
 
