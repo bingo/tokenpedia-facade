@@ -1,4 +1,12 @@
-"use strict"
+const { cms } = require('./cms')
+const { price } = require('./price')
+
+const END_POINTS = {
+    CMS: 'http://localhost:1337/',
+    QUOTE: 'http://localhost:1234/',
+    GITHUB: 'http://localhost:4321/',
+    HISTORY: 'http://bigdata:1234/',
+}
 
 // mock data preparation
 const TOKEN = {
@@ -14,39 +22,54 @@ const TOKEN = {
     currentPrice: 12.05,
 }
 
-//fixed hot token list
-const hotTokens = [
-    { id: "EOS", name: "EOS" },
-    { id: "NEO", name: "NEO" },
-    { id: "ONT", name: "ONT" },
-    { id: "TRX", name: "TRX" },
-]
 
-function tokensTopN(byField, order, limit) {
-    return null;
+
+async function getTokensTopN(_, {sort, order, limit}) {
+    var tokensTopN
+    await price.tokensTopN(sort, order, limit)
+        .then(result => {
+            tokensTopN = result
+        })
+    return tokensTopN
 }
 
-function tokenList(byField, order, limit) {
-    return null;
+async function getTokenList(_, { sort, order, limit }) {
+    var tokenList
+    await price.tokenList(sort, order, limit)
+        .then(result => {
+            tokenList = result
+        })
+    return tokenList
 }
 
 function token(id) {
     return null;
 }
 
+//get hot tokens list
+async function getHotTokens() {
+    var tokens
+    await cms.getHotTokens()
+        .then(hotTokens => {
+            tokens = hotTokens
+        })
+    return tokens;
+}
+
+
 //mock token list to market
 const tokensToMarket = [
-    { id: "AAA", name: "AAA", icon: "aaa_icon_url", estToMarket: "12345678"},
+    { id: "AAA", name: "AAA", icon: "aaa_icon_url", estToMarket: "12345678" },
 ]
 
-const _resolvers = {
+const resolverMap = {
     Query: {
-        hotTokens: () => hotTokens,
-        tokensTopN: tokensTopN,
+        hotTokens: getHotTokens,
+        tokensTopN: getTokensTopN,
         tokensToMarket: () => tokensToMarket,
-        tokenList: tokenList,
+        tokenList: getTokenList,
         token: (id) => TOKEN,
     },
 }
 
-exports.resolvers = _resolvers;
+module.exports.resolvers = resolverMap

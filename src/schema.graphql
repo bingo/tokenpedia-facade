@@ -1,8 +1,8 @@
 type Query {
   hotTokens: [Token!]
-  tokensTopN(byField: SORTABLE_FIELDS = MARKET_CAPITAL, order: ORDER = DESC, limit: Int = 20): [Token!]
+  tokensTopN(sort: SORTABLE_FIELDS = price, order: ORDER = desc, limit: Int = 20): [Token!]
   tokensToMarket: [TokenToMarket!]
-  tokenList(byField: SORTABLE_FIELDS = MARKET_CAPITAL, order: ORDER = DESC, limit: Int = 20): [Token!]
+  tokenList(sort: SORTABLE_FIELDS = price, order: ORDER = desc, limit: Int = 20): [Token!]
   token(id: String): Token 
 }
 
@@ -12,14 +12,16 @@ type Date {
 }
 
 enum SORTABLE_FIELDS {
-  MARKET_CAPITAL
-  CURRENT_PRICE
-  PERCENTAGE
+  captial
+  circulate
+  volume
+  price
+  percent
 }
 
 enum ORDER {
-  DESC #descend
-  ASC #ascend
+  desc #descend
+  asc #ascend
 }
 
 enum CurrencyUnit {
@@ -207,6 +209,7 @@ type Token {
   isListed: Boolean! #Listed in public exchange  
   marketCap(unit: CurrencyUnit = USD): Float#!may overfloat, bignumber needed, also UNIT needed
   currentPrice(unit: CurrencyUnit = USD): Float #price
+  currentPercentage: Float
   maxPrice(unit: CurrencyUnit = USD): Float #?
   minPrice(unit: CurrencyUnit = USD): Float #?
   topHolders: [Holder!] 
