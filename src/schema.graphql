@@ -2,7 +2,7 @@ type Query {
   hotTokens: [Token!]
   tokensTopN(sort: SORTABLE_FIELDS = price, order: ORDER = desc, limit: Int = 20): [Token!]
   tokensToMarket: [TokenToMarket!]
-  tokenList(sort: SORTABLE_FIELDS = price, order: ORDER = desc, limit: Int = 20): [Token!]
+  tokenList(sort: SORTABLE_FIELDS = price, order: ORDER = desc, limit: Int = 20, start: Int = 0): TokenPage
   token(id: String): Token 
 }
 
@@ -12,11 +12,10 @@ type Date {
 }
 
 enum SORTABLE_FIELDS {
-  captial
-  circulate
-  volume
+  market_cap
+  volume_24h
   price
-  percent
+  percent_change_24h
 }
 
 enum ORDER {
@@ -232,6 +231,11 @@ type TokenToMarket {
   name: String!
   icon: String
   estToMarket: Date
+}
+
+type TokenPage {
+  tokens: [Token]!
+  total: Int!
 }
 
 

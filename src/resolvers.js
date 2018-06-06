@@ -31,9 +31,9 @@ async function getTokensTopN(_, {sort, order, limit}) {
     return tokensTopN
 }
 
-async function getTokenList(_, { sort, order, limit }) {
+async function getTokenList(_, { sort, order, limit, start }) {
     var tokenList
-    await price.tokenList(sort, order, limit)
+    await price.tokenList(sort, order, limit, start)
         .then(result => {
             tokenList = result
         })
