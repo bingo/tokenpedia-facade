@@ -22,8 +22,6 @@ const TOKEN = {
     currentPrice: 12.05,
 }
 
-
-
 async function getTokensTopN(_, {sort, order, limit}) {
     var tokensTopN
     await price.tokensTopN(sort, order, limit)

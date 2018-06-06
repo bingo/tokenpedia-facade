@@ -86,8 +86,8 @@ const price = {
               'id': token.id,
               'name': token.name,
               'marketCap': token.market_cap,
-              'circulateSupply': 1000,
               'transactions': token.volume_24h,
+              'currentPrice': token.price,
               'currentPercentage': token.percent_change_24h
             }
           })

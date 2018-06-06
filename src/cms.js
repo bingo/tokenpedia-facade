@@ -1,6 +1,6 @@
 var axios = require('axios')
 
-const END_POINT = "http://localhost:1337/" //TODO: config dynamically
+const END_POINT = "http://47.98.164.206:1337/" //TODO: config dynamically
 
 const cms = {
   getHotTokens: () => {
