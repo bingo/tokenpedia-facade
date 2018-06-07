@@ -1,6 +1,6 @@
 var axios = require('axios')
 
-const END_POINT = "http://47.98.164.206:3000/token?" //TODO: config dynamically
+const END_POINT = process.env.ENDPOINT_QUOTE
 const SORT_PARAMS = [ //TODO: generate this dynamically
   'market_cap',
   'volume_24h',
@@ -13,7 +13,7 @@ const ORDER_PARAMS = [
   "asc"
 ]
 
-const price = {
+const quote = {
   tokensTopN: (sort, order, limit) => {
     //sort default = 'price', order default = 'desc', limit default = 20
     //verify input && specify default value
@@ -34,6 +34,7 @@ const price = {
     }
 
     var url = END_POINT + 'sort=' + s + '&order=' + o + '&limit=' + l
+    console.log("Quote service request: " + url)
     return new Promise(function (resolve, reject) {
       var tokens = []
       axios.get(url)
@@ -91,7 +92,7 @@ const price = {
     }
 
     var url = END_POINT + 'sort=' + s + '&order=' + o + '&limit=' + l + '&start=' + ss
-    console.log("request:" + url)
+    console.log("Quote service request: " + url)
     return new Promise(function (resolve, reject) {
       var tokens = []
       axios.get(url)
@@ -103,9 +104,11 @@ const price = {
                 ...
               ]
             metadata:
-              timestamp:
-              num_cryptocurrencies:
-              error:
+              cur_page:
+              page_size:
+              total_page:
+              total_tokens:
+              cur_tokens:
           */
           tokenPage = {
             tokens: response.data.data.map(token => {
@@ -118,7 +121,11 @@ const price = {
                 'currentPercentage': token.percent_change_24h
               }
             }),
-            total: response.data.metadata.num_cryptocurrencies
+            currentPage: response.data.metadata.cur_page,
+            pageSize: response.data.metadata.page_size,
+            totalPage: response.data.metadata.total_page,
+            totalTokens: response.data.metadata.total_tokens,
+            currentTokens: response.data.metadata.cur_tokens,
           }
           resolve(tokenPage)
         })
@@ -130,5 +137,5 @@ const price = {
   },
 }
 
-module.exports.price = price
+module.exports.quote = quote
 

@@ -235,7 +235,11 @@ type TokenToMarket {
 
 type TokenPage {
   tokens: [Token]!
-  total: Int!
+  currentPage: Int!
+  pageSize: Int!
+  totalPage: Int!
+  totalTokens: Int!
+  currentTokens: Int!
 }
 
 

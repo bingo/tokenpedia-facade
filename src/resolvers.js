@@ -1,5 +1,5 @@
-const { cms } = require('./cms')
-const { price } = require('./price')
+const { cms } = require('./connectors/cms')
+const { quote } = require('./connectors/quote')
 
 const END_POINTS = {
     CMS: 'http://localhost:1337/',
@@ -24,7 +24,7 @@ const TOKEN = {
 
 async function getTokensTopN(_, {sort, order, limit}) {
     var tokensTopN
-    await price.tokensTopN(sort, order, limit)
+    await quote.tokensTopN(sort, order, limit)
         .then(result => {
             tokensTopN = result
         })
@@ -33,7 +33,7 @@ async function getTokensTopN(_, {sort, order, limit}) {
 
 async function getTokenList(_, { sort, order, limit, start }) {
     var tokenList
-    await price.tokenList(sort, order, limit, start)
+    await quote.tokenList(sort, order, limit, start)
         .then(result => {
             tokenList = result
         })
